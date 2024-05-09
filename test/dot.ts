@@ -61,6 +61,9 @@ test('unset properties', t => {
   dot.unset(cloned, 'l1');
   t.is(dot.get(cloned, 'l1'), undefined);
 
+  dot.unset(cloned, 'value[0]');
+  t.deepEqual(dot.get(cloned, 'value'), [undefined, 2, 3]);
+
   dot.set(cloned, 'value', undefined);
   t.is(dot.get(cloned, 'value'), undefined);
 });
@@ -101,3 +104,9 @@ test.failing('unsupported types', t => {
   t.deepEqual(unsupported, cloned);
 });
 
+// Waiting on https://github.com/justinlettau/ts-dot-prop/pull/75
+test.failing('unset a single array item', t => {
+  const clone = dot.clone(arrays);
+  dot.unset(clone, 'numbers.0')
+  t.deepEqual(dot.get(clone, 'numbers'), [2, 3]);
+});
