@@ -1,6 +1,6 @@
 import test from 'ava'
 import { all } from './fixtures/values.js'
-import { clone } from '../src/functions/dot.js';
+import { clone, get, set } from '../src/functions/dot.js';
 import { Propmaster } from '../src/propmaster.js';
 
 test('value checking', t => {
@@ -28,26 +28,30 @@ test('cloning preserves original values', t => {
 })
 
 test('altering modifies original values', t => {
-  const cloned = clone(all);
-  t.is(cloned.primitives.string, 'string');
+  const start = clone(all);
+  t.is(start.primitives.string, 'string');
+  set(start, 'primitives.string', 'altered');
+  t.is(start.primitives.string, 'altered');
+  t.is(get(start, 'primitives.string'), 'altered');
 
-  const ap = Propmaster.alter(cloned).set('primitives.string', { value: 'fixed' }).get();
-  t.is(cloned.primitives.string, 'fixed');
-  t.deepEqual(ap, cloned);
+  const finish = Propmaster.alter(start).set('primitives.string', { value: 'fixed' }).get();
+  t.is(start.primitives.string, 'fixed');
+  t.deepEqual(start, finish);
 })
 
 test('set from list of options', t => {
   const p = new Propmaster({
     value: 1,
+    null: null,
     whitespace: '',
     emptyArray: [],
     emptyObject: {},
-    null: null,
     undefined: undefined,
     final: 2,
   });
-  const value = p.set('primitives.string', { value: 'fixed' }).get('primitives.string');
 
-  t.is(value, 'fixed');
-  t.is(all.primitives.string, 'string');
+  t.is(p.get('value'), 1);
+  p.set('value', ['null', 'whitespace', 'emptyArray', 'emptyObject', 'undefined', 'final']).get('value');
+  t.deepEqual(p.get('value'), []);
 });
+
