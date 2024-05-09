@@ -77,13 +77,11 @@ export class Propmaster {
     return this;
   }
 
-  if(predicate: PropPredicate, ifTrue: PropFunction, ifFalse?: PropFunction) {
-    if (predicate(this)) {
+  if(predicate: PropPredicate, ifTrue?: PropFunction, ifFalse?: PropFunction) {
+    if (predicate(this) && ifTrue) {
       ifTrue(this);
-    } else {
-      if (ifFalse) {
-        ifFalse(this);
-      }
+    } else if (ifFalse) {
+      ifFalse(this);
     }
     return this;
   }
