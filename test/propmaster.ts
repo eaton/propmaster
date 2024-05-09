@@ -55,3 +55,16 @@ test('set from list of options', t => {
   t.deepEqual(p.get('value'), []);
 });
 
+test('conditional set', t => {
+  const p = new Propmaster({ value: 1, final: 2 });
+
+  p.if(
+    p => p.get('value') === 1,
+    p => p.set('value', { value: 'modified' }),
+    p => p.set('final', { value: 'failed' }),
+  );
+  
+  t.is(p.get('value'), 'modified');
+  t.is(p.get('final'), 2);
+});
+
