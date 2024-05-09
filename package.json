@@ -1,0 +1,63 @@
+{
+  "name": "propmaster",
+  "version": "1.0.0",
+  "description": "Fold, spindle, and mutilate object properties en masse.",
+  "type": "module",
+  "exports": {
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "bin": {
+    "substats": "./dist/substats.js"
+  },
+  "files": [
+    "/dist",
+    "README.md"
+  ],
+  "scripts": {
+    "run": "./dist/cli.js",
+    "build": "pkgroll --minify",
+    "clean": "shx rm -rf dist",
+    "prepare": "npm run clean && npm run build",
+    "test": "ava"
+  },
+  "ava": {
+    "files": [
+      "./test/**/*",
+      "**/*.test.*",
+      "!./test/fixtures",
+      "!./test/output",
+      "!**/*.fixture.*"
+    ],
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--import=tsimp"
+    ]
+  },
+  "keywords": [
+    "cli",
+    "terminal"
+  ],
+  "author": "eaton",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "ava": "^6.1.2",
+    "pkgroll": "^2.0.2",
+    "shx": "^0.3.4",
+    "tsimp": "^2.0.11",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "@sindresorhus/is": "^6.3.0",
+    "@types/deep-equal": "^1.0.4",
+    "deep-equal": "^2.2.3",
+    "deepmerge": "^4.3.1",
+    "rfdc": "^1.3.1",
+    "ts-dot-prop": "^2.1.3"
+  }
+}
