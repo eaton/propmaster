@@ -4,11 +4,11 @@ import { Propmaster } from './propmaster';
 export class Property {
   constructor(protected object: Propmaster, protected path: string) { }
 
-  any() {}
-  all() {}
-  none() {}
+  ifAny() {}
+  ifAll() {}
+  ifNone() {}
 
   get value(): unknown {
-    return this.object.get(this.path);
+    return this.object.getValue(this.path);
   }
 }

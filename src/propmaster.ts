@@ -1,52 +1,54 @@
 import * as dot from "./functions/dot.js";
 import is from '@sindresorhus/is';
+import { Property } from "./property.js";
+import { PropmasterOptions, propmasterDefaults } from "./options.js";
+import { isEmpty } from "./functions/is-empty.js";
 
-export interface PropmasterOptions {
-  clone?: boolean,
-  nullIsEmpty?: boolean,
-  emptyStringIsEmpty?: boolean,
-  emptyArrayIsEmpty?: boolean,
-  emptyObjectIsEmpty?: boolean,
-  whiteSpaceIsEmpty?: boolean,
-  falseIsEmpty?: boolean,
-  falsyIsEmpty?: boolean,
-  isEmpty?: (input: unknown) => boolean
+export type ActiveObject = object;
+export type Path = string;
+export type Handle = Path | Retriever | Literal;
+export type Literal<T = unknown> = { value: T };
+
+export type Predicate = (object: ObjectProxy) => boolean;
+export type Retriever = (object: ObjectProxy) => unknown;
+export type Mutator = (object: ObjectProxy) => void;
+export type PredicateLogicMode = 'all' | 'any' | 'none';
+
+export type OneOrMore<T> = T | T[];
+
+export interface ObjectProxy {
+  get(path: string): unknown;
+  set(path: string, value: OneOrMore<Handle>): unknown;
+  unset(path: string): unknown;
+  if(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>, logic?: PredicateLogicMode): unknown;
+  ifAll(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
+  ifAny(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
+  ifNone(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
+  value?: ActiveObject;
+}
+export interface PropertyProxy {
+
 }
 
-type PropmasterObject = object;
-
-export type PropLiteral<T = unknown> = { value: T };
-export type PropValueSelector = string | PropLiteral | PropFunction;
-export type PropValueSelectorList = PropValueSelector | PropValueSelector[];
-
-export type PropFunction = (object: Propmaster) => unknown;
-export type PropPredicate = (object: Propmaster) => boolean;
-
-const defaults: PropmasterOptions = { 
-  clone: true,
-  nullIsEmpty: true,
-  emptyStringIsEmpty: true,
-};
-
-export class Propmaster {
-  static clone(object: PropmasterObject, options?: PropmasterOptions): Propmaster {
+export class Propmaster implements ObjectProxy {
+  static clone(object: ActiveObject, options?: PropmasterOptions): Propmaster {
     return new Propmaster(object, { ...options, clone: true });
   }
 
-  static alter(object: PropmasterObject, options?: PropmasterOptions): Propmaster {
+  static alter(object: ActiveObject, options?: PropmasterOptions): Propmaster {
     return new Propmaster(object, { ...options, clone: false });
   }
 
   protected options: PropmasterOptions;
 
-  constructor(protected object: PropmasterObject, options: PropmasterOptions = {}) {
-    this.options = dot.merge([defaults, options]);
+  constructor(protected object: ActiveObject, options: PropmasterOptions = {}) {
+    this.options = dot.merge([propmasterDefaults, options]);
     if (this.options.clone) {
       this.object = dot.clone(object)
     };
   }
 
-  get(input?: PropValueSelectorList, fallback?: unknown) {
+  getValue(input?: OneOrMore<Handle>, fallback?: unknown) {
     if (input === undefined) return this.object;
 
     for (const source of is.array(input) ? input : [input]) {
@@ -64,12 +66,16 @@ export class Propmaster {
     return undefined;
   }
 
-  set(path: string, valueInput: PropValueSelectorList) {
-    const value = this.get(valueInput);
+  set(path: string, valueInput: OneOrMore<Handle>) {
+    const value = this.getValue(valueInput);
     if (value !== undefined) {
       dot.set(this.object, path, value);
     }
     return this;
+  }
+
+  get(path: string): Property {
+    return new Property(this, path);
   }
 
   unset(path: string) {
@@ -77,34 +83,26 @@ export class Propmaster {
     return this;
   }
 
-  if(predicate: PropPredicate, ifTrue?: PropFunction, ifFalse?: PropFunction) {
-    if (predicate(this) && ifTrue) {
-      ifTrue(this);
-    } else if (ifFalse) {
-      ifFalse(this);
+  if(predicate: Predicate, whenTrue?: Retriever, whenFalse?: Retriever, logic: PredicateLogicMode = 'all') {
+    if (predicate(this) && whenTrue) {
+      whenTrue(this);
+    } else if (whenFalse) {
+      whenFalse(this);
     }
     return this;
   }
 
-  /**
-   * Used to test whether found values should be treated as undefined.
-   * 
-   * The behavior of this helper function is controlled by the options used
-   * to create the Propmaster instance.
-   */
-  protected isEmpty (input: unknown) {
-    if (is.undefined(input)) return true;
+  ifAll(predicate: Predicate, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>) {
+  }
 
-    if (this.options.isEmpty) return this.options.isEmpty(input);
+  ifAny(predicate: Predicate, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>) {
+  }
 
-    if (is.null(input)) return !!this.options.nullIsEmpty;
-    if (is.whitespaceString(input)) return !!this.options.whiteSpaceIsEmpty;
-    if (is.emptyString(input)) return !!this.options.emptyStringIsEmpty;
-    if (is.emptyObject(input)) return !!this.options.emptyObjectIsEmpty;
-    if (is.emptyArray(input)) return !!this.options.emptyArrayIsEmpty;
-    if (is.falsy(input)) return !!this.options.falsyIsEmpty;
-    if (input === false) return !!this.options.falseIsEmpty;
-    
-    return false;
+  ifNone(predicate: Predicate, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>) {
+  }
+
+  protected isEmpty(input: unknown) {
+    if (this.options.isEmpty) return this.options.isEmpty(input, this.options);
+    else return isEmpty(input, this.options);
   }
 }
