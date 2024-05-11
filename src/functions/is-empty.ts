@@ -1,5 +1,5 @@
 import is from "@sindresorhus/is";
-import { PropmasterOptions } from "../types.js";
+import { ObjectProxyOptions } from "../types.js";
 
 /**
  * Used to test whether found values should be treated as undefined.
@@ -7,8 +7,11 @@ import { PropmasterOptions } from "../types.js";
  * The behavior of this helper function is controlled by the options used
  * to create the Propmaster instance.
  */
-export function isEmpty (input: unknown, options: PropmasterOptions = {}) {
+export function isEmpty (input: unknown, options: ObjectProxyOptions = {}) {
   if (is.undefined(input)) return true;
+
+  if (options.isEmpty) return options.isEmpty(input, options);
+
   if (is.null(input)) return !!options.nullIsEmpty;
   if (is.whitespaceString(input)) return !!options.whiteSpaceIsEmpty;
   if (is.emptyString(input)) return !!options.emptyStringIsEmpty;
