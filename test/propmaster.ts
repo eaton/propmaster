@@ -4,7 +4,7 @@ import { clone, get, set } from '../src/functions/dot.js';
 import { Propmaster } from '../src/propmaster.js';
 
 test('value checking', t => {
-  const p = Propmaster.clone(all);
+  const p = new Propmaster(all);
   t.is(p.get('primitives.string').value, 'string');
   t.is(p.get('missing').value, undefined).valueOf;
 
@@ -12,7 +12,7 @@ test('value checking', t => {
 });
 
 test('value setting', t => {
-  const p = Propmaster.clone(all);
+  const p = new Propmaster(all);
   const value = p.set('primitives.string', { value: 'fixed' }).get('primitives.string').value;
 
   t.is(value, 'fixed');
@@ -20,7 +20,7 @@ test('value setting', t => {
 });
 
 test('cloning preserves original values', t => {
-  const alteredValue = Propmaster.clone(all)
+  const alteredValue = new Propmaster(all)
     .set('primitives.string', { value: 'fixed' })
     .get('primitives.string').value;
   t.is(alteredValue, 'fixed');
@@ -34,7 +34,7 @@ test('altering modifies original values', t => {
   t.is(start.primitives.string, 'altered');
   t.is(get(start, 'primitives.string'), 'altered');
 
-  const finish = Propmaster.alter(start).set('primitives.string', { value: 'fixed' }).value;
+  const finish = new Propmaster(start, { clone: false }).set('primitives.string', { value: 'fixed' }).value;
   t.is(start.primitives.string, 'fixed');
   t.deepEqual(start, finish);
 })

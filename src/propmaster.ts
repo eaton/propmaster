@@ -4,14 +4,6 @@ import { ActiveObject, Handle, ObjectProxy, OneOrMore, Predicate, PredicateLogic
 import { getValue } from "./functions/get-value.js";
 
 export class Propmaster implements ObjectProxy {
-  static clone(object: ActiveObject, options?: ObjectProxyOptions): Propmaster {
-    return new Propmaster(object, { ...options, clone: true });
-  }
-
-  static alter(object: ActiveObject, options?: ObjectProxyOptions): Propmaster {
-    return new Propmaster(object, { ...options, clone: false });
-  }
-
   readonly object: ActiveObject;
   readonly options: ObjectProxyOptions;
 
