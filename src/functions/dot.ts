@@ -2,6 +2,7 @@ import * as dot from 'ts-dot-prop';
 import deepEqual from "deep-equal";
 import deepmerge from "deepmerge";
 import reallyFastDeepClone from 'rfdc';
+import testDiff from 'js-testdiff';
 
 /**
  * Normalizes object access, comparison, cloning, and merging functions for use by

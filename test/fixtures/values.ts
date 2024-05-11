@@ -1,4 +1,4 @@
-export const date = new Date(1977, 8, 16);
+export const date = new Date(1977, 7, 16);
 
 export const map = new Map<string, number>([['first', 1], ['second', 2],['third', 3]]);
 
@@ -7,6 +7,10 @@ export const set = new Set<number>([1, 2, 3]);
 export const buffer = Buffer.from('sometext');
 
 export const func = () => 'return value';
+
+export const url = new URL('https://example.com');
+
+export const nan = NaN;
 
 export const instance = new (class TestClass {
   protected value = 'protected';
@@ -18,15 +22,13 @@ export const instance = new (class TestClass {
   }
 })();
 
-export const url = new URL('https://example.com');
-
 export const empty = {
   null: null,
   undefined: undefined,
-  emptyArray: [],
-  emptyString: '',
+  array: [],
+  string: '',
   whitespace: ' \t\n ',
-  emptyObject: {},
+  object: {},
 };
 
 export const primitives = {
@@ -37,6 +39,25 @@ export const primitives = {
   false: false,
   unknown: 'value' as unknown,
 };
+
+export const falsy = {
+  zeroString: '0',
+  zero: 0,
+  zeroNegative: -0,
+  stringEmpty: '',
+  null: null,
+  undefined: undefined,
+}
+
+export const truthy = {
+  true: true,
+  number: 1,
+  negative: -1,
+  stringFalse: 'false',
+  stringWhitespace: ' ',
+  array: [],
+  object: {},
+}
 
 export const arrays = {
   strings: ['first', 'second', 'third', 'fourth'],
@@ -60,6 +81,6 @@ export const nested = {
 
 export const complex = { date, map, set, buffer, func };
 
-export const unsupported = { url, instance };
+export const unsupported = { url, instance, nan };
 
-export const all = { primitives, arrays, nested, complex };
+export const all = { primitives, arrays, nested, complex, empty, truthy, falsy };

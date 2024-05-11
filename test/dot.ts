@@ -9,6 +9,7 @@ test('clone all types', t => {
 
 test('compare all types', t => {
   const cloned = dot.clone(all);
+  t.deepEqual(all, cloned);
   t.is(dot.equals(all, cloned), true);
 });
 
@@ -77,7 +78,6 @@ test('clone properties', t => {
   t.deepEqual(dot.get(target, 'alternate'), nested.l1);
 });
 
-
 test('array selection', t => {
   // Simple access
   t.is(dot.get(arrays, 'strings[0]'), 'first');
@@ -98,7 +98,7 @@ test.failing('novelty array offsets', t => {
   t.deepEqual(dot.get(arrays, 'numbers.[0-1]'), [1, 2]);
 });
 
-// We'd like to support these types, but they're just all around unhappy
+// We'd like to support these types, but they're just all around unhappy. tbd.
 test.failing('unsupported types', t => {
   const cloned = dot.clone(unsupported);
   t.deepEqual(unsupported, cloned);

@@ -62,14 +62,14 @@ export class Property implements PropertyProxy {
    * This type name is more specific than the one returned by JavaScript's `typeof`;
    * @see {@link TypeName} for a complete list of supported types.
    */
-  is(input: TypeName) {
+  is(input: TypeName | Lowercase<TypeName>) {
     return this.type.toLocaleLowerCase() === input.toLocaleLowerCase();
   }
 
   /**
    * Returns `true` if the current value's type name DOES NOT match the input string.
    */
-  isNot(input: TypeName) {
+  isNot(input: TypeName | Lowercase<TypeName>) {
     return !this.is(input);
   }
 
@@ -81,7 +81,7 @@ export class Property implements PropertyProxy {
    * By default this checks for undefined, null, and zero-length string values.
    * @see {isEmpty} for options to configure the empty-check rules.
    */
-  empty() {
+  isEmpty() {
     return isEmpty(this.value, this.object.options);
   }
 
@@ -89,7 +89,7 @@ export class Property implements PropertyProxy {
    * Returns `true` if the current value is *not* empty.
    */
   notEmpty() {
-    return !this.empty();
+    return !this.isEmpty();
   }
 
   /**
@@ -378,12 +378,22 @@ export class Property implements PropertyProxy {
     return this;
   }
 
+  xslt(selector: string) {
+    throw new Error('Not yet implemented.');
+    return this;
+  }
+
   attr(name: string) {
     throw new Error('Not yet implemented.');
     return this;
   }
 
-  xslt(selector: string) {
+  text(name: string) {
+    throw new Error('Not yet implemented.');
+    return this;
+  }
+
+  markup(name: string) {
     throw new Error('Not yet implemented.');
     return this;
   }
@@ -462,7 +472,7 @@ export class Property implements PropertyProxy {
         this.value = this.value.filter(predicate)
       } else {
         this.value = this.value.filter(Boolean)
-      }  
+      }
     }
     return this;
   }
@@ -537,7 +547,7 @@ export class Property implements PropertyProxy {
   limit(length: number) {
     return this.slice(0, length);
   }
-  
+
 
   /** Number manipulation */
 
