@@ -50,6 +50,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "@eatonfyi/text": "github:eaton/text",
     "@sindresorhus/is": "^6.3.0",
     "@types/deep-equal": "^1.0.4",
     "@types/micromatch": "^4.0.7",

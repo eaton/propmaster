@@ -31,7 +31,10 @@ export interface ObjectProxy {
 export interface PropertyProxy {
   readonly object: ObjectProxy;
   readonly path: string;
-  readonly value?: unknown;
+  readonly value: unknown;
+  readonly type: string;
+  
+  set(input: unknown): PropertyProxy;
 }
 
 export interface ObjectProxyOptions {
