@@ -13,9 +13,17 @@ export class Property implements PropertyProxy {
     this.value = getValue(object, path);
   }
 
-  readonly object: ObjectProxy
-  readonly path: string
-  public value: unknown;
+  readonly object: ObjectProxy;
+  readonly path: string;
+  protected _value: unknown;
+
+  get value(): unknown {
+    return this._value;
+  }
+  set value(input: unknown) {
+    this._value = input;
+    if (!this.object.options.batchMutations) this.object.set(this.path, { value: this._value });
+  }
 
   /**
    * Finalizes any mutations made to the current value, pushing them to the

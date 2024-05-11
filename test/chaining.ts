@@ -4,7 +4,7 @@ import * as values from './fixtures/values.js';
 
 test('chained string manipulation', t => {
   const p = new Propmaster(values.arrays);
-  p.get('strings').join(',').changeCase('upper').split(',').set();
 
+  p.get('strings').join(',').changeCase('upper').split(',');
   t.deepEqual(p.get('strings').value, ['FIRST', 'SECOND', 'THIRD', 'FOURTH']);
 });

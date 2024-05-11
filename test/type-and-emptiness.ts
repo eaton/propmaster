@@ -31,7 +31,6 @@ test('type coercion', t => {
   // TODO: asString, asNumber, asDate
 });
 
-
 test('default empty checks', t => {
   const p = new Propmaster(values.all);
   

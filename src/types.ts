@@ -48,6 +48,16 @@ export interface ObjectProxyOptions {
    * @defaultValue `false`
    */
   strict?: boolean;
+
+  /**
+   * When mutating property values, batch chained operations until a `set()` call
+   * is made.
+   * 
+   * @defaultValue `false`
+   * 
+   * @experimental
+   */
+  batchMutations?: boolean;
   
   /**
    * Perform all operations on a cloned copy of the active object; the original will not be modified.
