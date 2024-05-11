@@ -22,6 +22,16 @@ test('non-empty type checks', t => {
   t.assert(p.get('primitives.number').isNot('undefined'));
 });
 
+test('type coercion', t => {
+  const p = new Propmaster(values.all);
+  
+  t.assert(p.get('primitives.string').is('string'));
+  t.assert(p.get('primitives.string').asArray().is('array'));
+
+  // TODO: asString, asNumber, asDate
+});
+
+
 test('default empty checks', t => {
   const p = new Propmaster(values.all);
   
@@ -42,6 +52,8 @@ test('default empty checks', t => {
 
 test('all empty checks', t => {
   const p = new Propmaster(values.all, {
+    nullIsEmpty: true,
+    emptyStringIsEmpty: true,
     whiteSpaceIsEmpty: true,
     emptyArrayIsEmpty: true,
     emptyObjectIsEmpty: true,

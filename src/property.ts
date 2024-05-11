@@ -49,7 +49,7 @@ export class Property implements PropertyProxy {
    * @see {@link TypeName} for a complete list of supported types.
    */
   get type() {
-    return is(this.value);
+    return is(this.value).toString();
   }
 
   /** Type checking, equality, and comparisons **/
@@ -122,9 +122,9 @@ export class Property implements PropertyProxy {
    * Note that this check only works with strings, numbers, and dates.
    */
   isGreaterThan(input: SortablePrimitive) {
-    if ((is.number(input) && is.number(this.value))) return input > this.value;
-    if (is.string(input) && is.string(this.value)) return input > this.value;
-    if (is.date(input) && is.date(this.value)) return input > this.value;
+    if ((is.number(input) && is.number(this.value))) return (this.value > input);
+    if (is.string(input) && is.string(this.value)) return (this.value > input);
+    if (is.date(input) && is.date(this.value)) return (this.value > input);
     return false;
   }
 
@@ -134,9 +134,9 @@ export class Property implements PropertyProxy {
    * Note that this check only works with strings, numbers, and dates.
    */
   isLessThan(input: SortablePrimitive) {
-    if ((is.number(input) && is.number(this.value))) return input < this.value;
-    if (is.string(input) && is.string(this.value)) return input < this.value;
-    if (is.date(input) && is.date(this.value)) return input < this.value;
+    if ((is.number(input) && is.number(this.value))) return (this.value < input);
+    if (is.string(input) && is.string(this.value)) return (this.value < input);
+    if (is.date(input) && is.date(this.value)) return (this.value < input);
     return false;
   }
 
@@ -148,15 +148,15 @@ export class Property implements PropertyProxy {
    */
   isBetween(min: SortablePrimitive, max: SortablePrimitive) {
     if ((is.number(min) && is.number(max) && is.number(this.value))) {
-      return this.value >= min && this.value >= max;
+      return this.value >= min && this.value <= max;
     }
 
     if ((is.string(min) && is.string(max) && is.string(this.value))) {
-      return this.value >= min && this.value >= max;
+      return this.value >= min && this.value <= max;
     }
 
     if ((is.date(min) && is.date(max) && is.date(this.value))) {
-      return this.value >= min && this.value >= max;
+      return this.value >= min && this.value <= max;
     }
     return false;
   }
@@ -264,6 +264,7 @@ export class Property implements PropertyProxy {
   /** Convenience aliases **/
 
   eq = this.isEqualTo;
+  neq = this.notEqualTo;
   notEq = this.notEqualTo;
   gt = this.isGreaterThan;
   isGt = this.isGreaterThan;
@@ -271,6 +272,10 @@ export class Property implements PropertyProxy {
   isLt = this.isLessThan;
   bt = this.isBetween;
   isBt = this.isBetween;
+  in = this.isIn;
+  has = this.contains;
+  includes = this.contains;
+  like = this.isLike;
 
   /** Type coercion **/
 
@@ -278,7 +283,6 @@ export class Property implements PropertyProxy {
     if (this.value?.toString) this.value = this.value.toString();
     return this;
   }
-
   
   /**
    * Converts the current value to a number, if possible.
@@ -308,7 +312,7 @@ export class Property implements PropertyProxy {
    * arrays into bare values.
    */
   asArray() {
-    this.value ??= is.array(this.value) ? this.value : [this.value];
+    this.value = is.array(this.value) ? this.value : [this.value];
     this.value ??= [];
     return this;
   }
