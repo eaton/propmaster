@@ -1,5 +1,5 @@
 import is from "@sindresorhus/is";
-import { PropmasterOptions } from "../options.js";
+import { PropmasterOptions } from "../types.js";
 
 /**
  * Used to test whether found values should be treated as undefined.

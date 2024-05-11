@@ -1,7 +1,7 @@
 import * as dot from "./functions/dot.js";
 import is from '@sindresorhus/is';
 import { Property } from "./property.js";
-import { PropmasterOptions, propmasterDefaults } from "./options.js";
+import { PropmasterOptions, propmasterDefaults } from "./types.js";
 import { isEmpty } from "./functions/is-empty.js";
 
 export type ActiveObject = object;
@@ -24,10 +24,11 @@ export interface ObjectProxy {
   ifAll(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
   ifAny(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
   ifNone(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
-  value?: ActiveObject;
+  readonly value?: ActiveObject;
 }
 export interface PropertyProxy {
-
+  readonly path: string;
+  readonly value?: unknown;
 }
 
 export class Propmaster implements ObjectProxy {
