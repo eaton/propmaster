@@ -1,41 +1,8 @@
-export type ActiveObject = object;
-export type Path = string;
-export type Handle = Path | Retriever | Literal;
-export type Literal<T = unknown> = { value: T };
-
-export type SortablePrimitive = string | number | Date;
-
-export type Predicate = (object: ObjectProxy) => boolean;
-export type Retriever = (object: ObjectProxy) => unknown;
-export type Mutator = (object: ObjectProxy) => void;
-export type PredicateLogicMode = 'all' | 'any' | 'none';
-
-export type OneOrMore<T> = T | T[];
-
-export interface ObjectProxy {
-  readonly object: ActiveObject;
-  readonly options: ObjectProxyOptions;
-
-  get(path: string): PropertyProxy;
-  set(path: string, value: OneOrMore<Handle>): ObjectProxy;
-  unset(path: string): unknown;
-  
-  if(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>, logic?: PredicateLogicMode): unknown;
-  ifAll(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
-  ifAny(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
-  ifNone(predicate: OneOrMore<Predicate>, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>): unknown;
-
-  readonly value?: ActiveObject;
-}
-
-export interface PropertyProxy {
-  readonly object: ObjectProxy;
-  readonly path: string;
-  readonly type: string;
-  value: unknown;
-  
-  set(input: unknown): PropertyProxy;
-}
+export const propmasterDefaults: ObjectProxyOptions = { 
+  clone: true,
+  nullIsEmpty: true,
+  emptyStringIsEmpty: true,
+};
 
 export interface ObjectProxyOptions {
   /**
@@ -122,9 +89,3 @@ export interface ObjectProxyOptions {
    */
   isEmpty?: (input: unknown, options?: ObjectProxyOptions) => boolean
 }
-
-export const propmasterDefaults: ObjectProxyOptions = { 
-  clone: true,
-  nullIsEmpty: true,
-  emptyStringIsEmpty: true,
-};

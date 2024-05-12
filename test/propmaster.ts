@@ -1,7 +1,6 @@
 import test from 'ava'
 import { all } from './fixtures/values.js'
-import { clone, get, set } from '../src/functions/dot.js';
-import { Propmaster } from '../src/propmaster.js';
+import { dot, Propmaster } from '../src/index.js';
 
 test('value checking', t => {
   const p = new Propmaster(all);
@@ -28,11 +27,11 @@ test('cloning preserves original values', t => {
 })
 
 test('altering modifies original values', t => {
-  const start = clone(all);
+  const start = dot.clone(all);
   t.is(start.primitives.string, 'string');
-  set(start, 'primitives.string', 'altered');
+  dot.set(start, 'primitives.string', 'altered');
   t.is(start.primitives.string, 'altered');
-  t.is(get(start, 'primitives.string'), 'altered');
+  t.is(dot.get(start, 'primitives.string'), 'altered');
 
   const finish = new Propmaster(start, { clone: false }).set('primitives.string', { value: 'fixed' }).value;
   t.is(start.primitives.string, 'fixed');

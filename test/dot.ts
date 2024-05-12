@@ -1,5 +1,5 @@
 import test from 'ava'
-import * as dot from "../src/functions/dot.js";
+import * as dot from "../src/dot/index.js";
 import { all, nested, arrays, unsupported } from './fixtures/values.js'
 
 test('clone all types', t => {
@@ -22,7 +22,7 @@ test('object merge', t => {
     new: 'text',
   };
 
-  const mergedObject = dot.merge([ nested, partial ]);
+  const mergedObject = dot.merge(nested, partial);
 
   t.deepEqual(dot.get(mergedObject, 'l1.value'), [...nested.l1.value, 4]);
   t.is(dot.get(mergedObject, 'l1.l2'), 'override');

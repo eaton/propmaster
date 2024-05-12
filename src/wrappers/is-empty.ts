@@ -1,5 +1,5 @@
 import is from "@sindresorhus/is";
-import { ObjectProxyOptions } from "../types.js";
+import { ObjectProxyOptions } from "./options.js";
 
 /**
  * Used to test whether found values should be treated as undefined.

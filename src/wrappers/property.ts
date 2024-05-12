@@ -1,20 +1,17 @@
-import is, { Predicate, Primitive, TypeName, isString, isEmptyStringOrWhitespace } from '@sindresorhus/is';
-import { ObjectProxy, PropertyProxy, SortablePrimitive } from './types.js';
-import { getValue } from './functions/get-value.js';
-import * as dot from './functions/dot-paths.js';
-import { isEmpty } from './functions/is-empty.js';
+import is, { Primitive, TypeName, Predicate } from '@sindresorhus/is';
+
 import micromatch from 'micromatch';
 import { toCase } from '@eatonfyi/text';
 import prettyBytes from 'pretty-bytes';
+import * as cheerio from 'cheerio';
+import { cheerioJsonMapperSync, JsonTemplateObject } from 'cheerio-json-mapper-sync';
 
-type PercentString = `${number}%`;
-
-function isPercentString(value: unknown): value is PercentString {
-	if (isString(value) && value.endsWith('%')) {
-    return is.numericString(value.slice(0, -1));
-  }
-  return false;
-}
+import * as dot from '../dot/index.js';
+import { SortablePrimitive } from './types.js';
+import { ObjectProxy, PropertyProxy } from './interfaces.js';
+import { getValue } from './get-value.js';
+import { isEmpty } from './is-empty.js';
+import { isPercentString } from './type-guards.js';
 
 export class Property implements PropertyProxy {
   constructor(object: ObjectProxy, path: string) {
@@ -401,38 +398,31 @@ export class Property implements PropertyProxy {
 
   /** HTML / XML parsing and manipulation */
 
-  querySelect = (selector: string) => {
-    throw new Error('Not yet implemented.');
-    return this;
-  };
+  protected parseMarkup(type?: 'html' | 'xml') {
+    if (is.string(this.value) || is.buffer(this.value)) {
+      type ??= this.value.toString().startsWith('<?xml ') ? 'xml' : 'html';
+      return cheerio.load(this.value, (type === 'xml') ? { xmlMode: true } : undefined);
+    }
+  }
 
-  querySelectAll = (selector: string) => {
-    throw new Error('Not yet implemented.');
-    return this;
-  };
+  select(selector: string, attribute?: string) {
+    const $ = this.parseMarkup();
+    if ($) {
 
-  xslt = (selector: string) => {
-    throw new Error('Not yet implemented.');
-    return this;
-  };
+    }
+  }
 
-  attr = (name: string) => {
-    throw new Error('Not yet implemented.');
-    return this;
-  };
+  selectText(selector: string) {
+    const $ = this.parseMarkup();
+    if ($) {
 
-  text = (name: string) => {
-    throw new Error('Not yet implemented.');
-    return this;
-  };
-
-  markup = (name: string) => {
-    throw new Error('Not yet implemented.');
-    return this;
-  };
-
-  extract = (template: object | object[]) => {
-    throw new Error('Not yet implemented.');
+    }
+  }
+  
+  extract(template: JsonTemplateObject | JsonTemplateObject[]) {
+    if (is.string(this.value)) {
+      this.value = cheerioJsonMapperSync(this.value, template);
+    }
     return this;
   }
 

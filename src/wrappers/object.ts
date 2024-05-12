@@ -1,14 +1,19 @@
-import * as dot from "./functions/dot-paths.js";
+import * as dot from "../dot/index.js";
+import { ActiveObject, Handle, OneOrMore, Predicate, CombinationLogic, Retriever } from "./types.js";
+import { ObjectProxyOptions, propmasterDefaults } from './options.js';
+import { ObjectProxy } from './interfaces.js';
+import { getValue } from "./get-value.js";
 import { Property } from "./property.js";
-import { ActiveObject, Handle, ObjectProxy, OneOrMore, Predicate, PredicateLogicMode, ObjectProxyOptions, Retriever, propmasterDefaults } from "./types.js";
-import { getValue } from "./functions/get-value.js";
+
+type OPredicate = Predicate<ObjectProxy>;
+type ORetriever = Retriever<ObjectProxy>;
 
 export class Propmaster implements ObjectProxy {
   readonly object: ActiveObject;
   readonly options: ObjectProxyOptions;
 
   constructor(object: ActiveObject, options: ObjectProxyOptions = {}) {
-    this.options = dot.merge([propmasterDefaults, options]);
+    this.options = dot.merge(propmasterDefaults, options);
     this.object = this.options.clone ? dot.clone(object) : object;
   }
 
@@ -33,7 +38,7 @@ export class Propmaster implements ObjectProxy {
     return this;
   }
 
-  if(predicate: Predicate, whenTrue?: Retriever, whenFalse?: Retriever, logic: PredicateLogicMode = 'all') {
+  if(predicate: OPredicate, whenTrue?: ORetriever, whenFalse?: ORetriever, logic: CombinationLogic = 'all') {
     if (predicate(this) && whenTrue) {
       whenTrue(this);
     } else if (whenFalse) {
@@ -42,12 +47,12 @@ export class Propmaster implements ObjectProxy {
     return this;
   }
 
-  ifAll(predicate: Predicate, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>) {
+  ifAll(predicate: OPredicate, whenTrue?: OneOrMore<ORetriever>, whenFalse?: OneOrMore<ORetriever>) {
   }
 
-  ifAny(predicate: Predicate, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>) {
+  ifAny(predicate: OPredicate, whenTrue?: OneOrMore<ORetriever>, whenFalse?: OneOrMore<ORetriever>) {
   }
 
-  ifNone(predicate: Predicate, whenTrue?: OneOrMore<Retriever>, whenFalse?: OneOrMore<Retriever>) {
+  ifNone(predicate: OPredicate, whenTrue?: OneOrMore<ORetriever>, whenFalse?: OneOrMore<ORetriever>) {
   }
 }

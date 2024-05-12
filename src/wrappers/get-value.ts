@@ -1,6 +1,7 @@
-import * as dot from "./dot-paths.js";
+import * as dot from "../dot/index.js";
 import is from '@sindresorhus/is';
-import { Handle, ObjectProxy, OneOrMore } from "../types.js";
+import { Handle, OneOrMore } from "./types.js";
+import { ObjectProxy } from './interfaces.js'
 import { isEmpty } from "./is-empty.js";
 
 export function getValue(object: ObjectProxy, handle: OneOrMore<Handle>, fallback?: unknown) {
