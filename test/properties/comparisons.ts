@@ -1,6 +1,6 @@
 import test from 'ava';
-import { Propmaster } from '../src/propmaster.js'
-import * as values from './fixtures/values.js';
+import { Propmaster } from '../../src/propmaster.js'
+import * as values from '../fixtures/values.js';
 
 test('primitive equality', t => {
   const p = new Propmaster(values.all);

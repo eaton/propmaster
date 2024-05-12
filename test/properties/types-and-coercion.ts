@@ -1,6 +1,6 @@
 import test from 'ava';
-import { Propmaster } from '../src/propmaster.js'
-import * as values from './fixtures/values.js';
+import { Propmaster } from '../../src/propmaster.js'
+import * as values from '../fixtures/values.js';
 import is from '@sindresorhus/is';
 
 test('non-empty type checks', t => {
