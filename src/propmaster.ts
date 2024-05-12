@@ -1,4 +1,4 @@
-import * as dot from "./functions/dot.js";
+import * as dot from "./functions/dot-paths.js";
 import { Property } from "./property.js";
 import { ActiveObject, Handle, ObjectProxy, OneOrMore, Predicate, PredicateLogicMode, ObjectProxyOptions, Retriever, propmasterDefaults } from "./types.js";
 import { getValue } from "./functions/get-value.js";

@@ -1,11 +1,10 @@
 import is, { Predicate, Primitive, TypeName, isString, isEmptyStringOrWhitespace } from '@sindresorhus/is';
 import { ObjectProxy, PropertyProxy, SortablePrimitive } from './types.js';
 import { getValue } from './functions/get-value.js';
-import * as dot from './functions/dot.js';
+import * as dot from './functions/dot-paths.js';
 import { isEmpty } from './functions/is-empty.js';
 import micromatch from 'micromatch';
 import { toCase } from '@eatonfyi/text';
-import prettyMilliseconds from 'pretty-ms';
 import prettyBytes from 'pretty-bytes';
 
 type PercentString = `${number}%`;
@@ -31,7 +30,6 @@ export class Property implements PropertyProxy {
   get value(): unknown {
     return this._value;
   }
-
   set value(input: unknown) {
     this._value = input;
     if (!this.object.options.batchMutations) this.object.set(this.path, { value: this._value });
@@ -324,16 +322,6 @@ export class Property implements PropertyProxy {
   }
 
   /**
-   * Converts the current value to a Date, if possible. Optionally accepts one or
-   * more date formatting strings, each of which will be attempted in turn until
-   * one returns a valid date object.
-   */
-  asDate(format?: string | string[]) {
-    throw new Error('Not yet implemented.');
-    return this;
-  }
-
-  /**
    * Wraps the current value in an array if it is not already an array.
    * 
    * @remarks
@@ -346,6 +334,17 @@ export class Property implements PropertyProxy {
     this.value ??= [];
     return this;
   }
+
+  /**
+   * Converts the current value to a Date, if possible. Optionally accepts one or
+   * more date formatting strings, each of which will be attempted in turn until
+   * one returns a valid date object.
+   */
+  asDate(format?: string | string[]) {
+    throw new Error('Not yet implemented.');
+    return this;
+  }
+
 
   /** String manipulation **/
 

@@ -1,4 +1,4 @@
-import * as dot from "./dot.js";
+import * as dot from "./dot-paths.js";
 import is from '@sindresorhus/is';
 import { Handle, ObjectProxy, OneOrMore } from "../types.js";
 import { isEmpty } from "./is-empty.js";
