@@ -31,7 +31,7 @@ export const empty = {
   object: {},
 };
 
-export const coercable = {
+export const coercible = {
   string: 'text',
   int: '123',
   decimal: '1.233',
@@ -51,7 +51,6 @@ export const coerced = {
   dateSlash: new Date(1977, 9, 16),
   dateDash: new Date(1977, 9, 16)
 }
-
 
 export const primitives = {
   string: 'string',
@@ -105,4 +104,4 @@ export const complex = { date, map, set, buffer, func };
 
 export const unsupported = { url, instance, nan };
 
-export const all = { primitives, arrays, nested, complex, empty, truthy, falsy, coerced };
+export const all = { primitives, arrays, nested, complex, empty, truthy, falsy, coercible, coerced };
