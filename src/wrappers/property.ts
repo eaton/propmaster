@@ -29,11 +29,11 @@ export class Property implements PropertyProxy {
   }
   set value(input: unknown) {
     this._value = input;
-    if (!this.object.options.batchMutations) this.object.set(this.path, { value: this._value });
+    if (!this.object.options.batchMutations) this.object.set(this.path, { literal: this._value });
   }
 
   done() {
-    if (this.object.options.batchMutations) this.object.set(this.path, { value: this._value });
+    if (this.object.options.batchMutations) this.object.set(this.path, { literal: this._value });
     return this.object;
   }
 
@@ -56,7 +56,7 @@ export class Property implements PropertyProxy {
     if (!is.undefined(input)) {
       this.value = input;
     }
-    this.object.set(this.path, { value: this.value });
+    this.object.set(this.path, { literal: this.value });
     return this;
   }
 

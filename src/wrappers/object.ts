@@ -1,5 +1,5 @@
 import * as dot from "../dot/index.js";
-import { ActiveObject, Handle, OneOrMore, Predicate, CombinationLogic, Retriever } from "./types.js";
+import { ActiveObject, Handle, OneOrMore, Predicate, PredicateLogic, Retriever } from "./types.js";
 import { ObjectProxyOptions, propmasterDefaults } from './options.js';
 import { ObjectProxy } from './interfaces.js';
 import { getValue } from "./get-value.js";
@@ -38,7 +38,7 @@ export class Propmaster implements ObjectProxy {
     return this;
   }
 
-  if(predicate: OPredicate, whenTrue?: ORetriever, whenFalse?: ORetriever, logic: CombinationLogic = 'all') {
+  if(predicate: OPredicate, whenTrue?: ORetriever, whenFalse?: ORetriever, logic: PredicateLogic = 'all') {
     if (predicate(this) && whenTrue) {
       whenTrue(this);
     } else if (whenFalse) {

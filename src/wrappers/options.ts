@@ -4,7 +4,7 @@ export const propmasterDefaults: ObjectProxyOptions = {
   emptyStringIsEmpty: true,
 };
 
-export interface ObjectProxyOptions {
+export interface ObjectProxyOptions extends IsEmptyOptions {
   /**
    * Throw errors when property mutations fail.
    * 
@@ -32,7 +32,9 @@ export interface ObjectProxyOptions {
    * @defaultValue `true`
    */
   clone?: boolean,
+}
 
+export interface IsEmptyOptions {
   /**
    * Treat `null` as empty when processing and filtering values.
    * 
@@ -87,5 +89,5 @@ export interface ObjectProxyOptions {
   /**
    * A custom function to override normal 'empty value' checking.
    */
-  isEmpty?: (input: unknown, options?: ObjectProxyOptions) => boolean
+  isEmpty?: (input: unknown, options?: IsEmptyOptions) => boolean
 }

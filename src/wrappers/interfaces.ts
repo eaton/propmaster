@@ -1,4 +1,4 @@
-import { ActiveObject, CombinationLogic, Handle, OneOrMore, Predicate, Retriever } from "./types.js";
+import { ActiveObject, PredicateLogic, Handle, OneOrMore, Predicate, Retriever } from "./types.js";
 import { ObjectProxyOptions } from "./options.js";
 
 export interface ObjectProxy {
@@ -9,7 +9,7 @@ export interface ObjectProxy {
   set(path: string, value: OneOrMore<Handle>): ObjectProxy;
   unset(path: string): unknown;
   
-  if(predicate: OneOrMore<Predicate<ObjectProxy>>, whenTrue?: OneOrMore<Retriever<ObjectProxy>>, whenFalse?: OneOrMore<Retriever<ObjectProxy>>, logic?: CombinationLogic): unknown;
+  if(predicate: OneOrMore<Predicate<ObjectProxy>>, whenTrue?: OneOrMore<Retriever<ObjectProxy>>, whenFalse?: OneOrMore<Retriever<ObjectProxy>>, logic?: PredicateLogic): unknown;
   ifAll(predicate: OneOrMore<Predicate<ObjectProxy>>, whenTrue?: OneOrMore<Retriever<ObjectProxy>>, whenFalse?: OneOrMore<Retriever<ObjectProxy>>): unknown;
   ifAny(predicate: OneOrMore<Predicate<ObjectProxy>>, whenTrue?: OneOrMore<Retriever<ObjectProxy>>, whenFalse?: OneOrMore<Retriever<ObjectProxy>>): unknown;
   ifNone(predicate: OneOrMore<Predicate<ObjectProxy>>, whenTrue?: OneOrMore<Retriever<ObjectProxy>>, whenFalse?: OneOrMore<Retriever<ObjectProxy>>): unknown;
