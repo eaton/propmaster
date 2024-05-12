@@ -18,6 +18,9 @@ export const paths = dot.paths;
 export const merge = deepmerge.all;
 export const equals = deepEqual;
 export const clone = reallyFastDeepClone({ circles: false, proto: true });
+export const properties = (input: object) => {
+  return Object.fromEntries(dot.paths(input).map(p => [p, dot.get(input, p)])) as Record<string, unknown>;
+}
 
 /**
  * Copies a property value from a source object to a target object.
