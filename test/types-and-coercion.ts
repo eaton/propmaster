@@ -23,27 +23,6 @@ test('non-empty type checks', t => {
   t.assert(p.get('primitives.number').isNot('undefined'));
 });
 
-test('type coercion', t => {
-  const p = new Propmaster(values.coercable);
-  
-  // Things to array of strings
-  t.assert(p.get('string').is('string'));
-  t.assert(p.get('string').asArray().is('array'));
-  t.assert(p.get('string').asArray().first().is('string'));
-
-  // Strings to numbers
-  t.assert(p.get('int').asNumber().is('number'));
-  t.is(p.get('int').asNumber().value, values.coerced.int);
-
-  t.assert(p.get('decimal').asNumber().is('number'));
-  t.is(p.get('decimal').asNumber().value, values.coerced.decimal);
-
-  t.assert(p.get('percent').asNumber().is('number'));
-  t.is(p.get('percent').asNumber().value, values.coerced.percent);
-
-  // TODO: Strings to Dates
-});
-
 test('default empty checks', t => {
   const p = new Propmaster(values.all);
   
@@ -112,4 +91,41 @@ test('no empty checks', t => {
   t.is(p.get('empty.whitespace').isEmpty(), false);
   t.is(p.get('empty.array').isEmpty(), false);
   t.is(p.get('empty.object').isEmpty(), false);
+});
+
+test('type coercion', t => {
+  const p = new Propmaster(values.all);
+  
+  // Strings to array-of-strings
+  t.assert(p.get('coercible.string').is('string'));
+  t.assert(p.get('coercible.string').asArray().is('array'));
+  t.assert(p.get('coercible.string').asArray().first().is('string'));
+
+  // Strings to numbers
+  t.assert(p.get('coercible.int').asNumber().is('number'));
+  t.is(p.get('coercible.int').asNumber().value, values.coerced.int);
+
+  t.assert(p.get('coercible.decimal').asNumber().is('number'));
+  t.is(p.get('coercible.decimal').asNumber().value, values.coerced.decimal);
+
+  t.assert(p.get('coercible.percent').asNumber().is('number'));
+  t.is(p.get('coercible.percent').asNumber().value, values.coerced.percent);
+
+  // Numbers and dates to strings
+  t.assert(p.get('complex.date').is('date'));
+  t.assert(p.get('complex.date').asString().is('string'));
+
+  // This will absolutely break everywhere other than home,
+  // its existence is both a personal and professional failure
+  t.is(p.get('complex.date').asString().value, 'Tue Aug 16 1977 00:00:00 GMT-0500 (Central Daylight Time)');
+
+  t.assert(p.get('primitives.true').is('boolean'));
+  t.assert(p.get('primitives.true').asString().is('string'));
+  t.is(p.get('primitives.true').asString().value, 'true');
+
+  t.assert(p.get('primitives.number').is('number'));
+  t.assert(p.get('primitives.number').asString().is('string'));
+  t.is(p.get('primitives.number').asString().value, '1');
+
+  // TODO: Strings to Dates
 });
