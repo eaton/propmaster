@@ -394,37 +394,37 @@ export class Property implements PropertyProxy {
 
   /** HTML / XML parsing and manipulation */
 
-  querySelect(selector: string) {
+  querySelect = (selector: string) => {
     throw new Error('Not yet implemented.');
     return this;
-  }
+  };
 
-  querySelectAll(selector: string) {
+  querySelectAll = (selector: string) => {
     throw new Error('Not yet implemented.');
     return this;
-  }
+  };
 
-  xslt(selector: string) {
+  xslt = (selector: string) => {
     throw new Error('Not yet implemented.');
     return this;
-  }
+  };
 
-  attr(name: string) {
+  attr = (name: string) => {
     throw new Error('Not yet implemented.');
     return this;
-  }
+  };
 
-  text(name: string) {
+  text = (name: string) => {
     throw new Error('Not yet implemented.');
     return this;
-  }
+  };
 
-  markup(name: string) {
+  markup = (name: string) => {
     throw new Error('Not yet implemented.');
     return this;
-  }
+  };
 
-  extract(template: object | object[]) {
+  extract = (template: object | object[]) => {
     throw new Error('Not yet implemented.');
     return this;
   }
