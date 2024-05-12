@@ -5,6 +5,8 @@ import * as dot from './functions/dot.js';
 import { isEmpty } from './functions/is-empty.js';
 import micromatch from 'micromatch';
 import { toCase } from '@eatonfyi/text';
+import prettyMilliseconds from 'pretty-ms';
+import prettyBytes from 'pretty-bytes';
 
 type PercentString = `${number}%`;
 
@@ -29,9 +31,15 @@ export class Property implements PropertyProxy {
   get value(): unknown {
     return this._value;
   }
+
   set value(input: unknown) {
     this._value = input;
     if (!this.object.options.batchMutations) this.object.set(this.path, { value: this._value });
+  }
+
+  done() {
+    if (this.object.options.batchMutations) this.object.set(this.path, { value: this._value });
+    return this.object;
   }
 
   /**
@@ -448,26 +456,6 @@ export class Property implements PropertyProxy {
   }
 
   /**
-   * Sort the items in of an array value in ascending order.
-   * 
-   * Note: This function uses Javascript's default sort functions, and will only
-   * work with string, number, or date values.
-   */
-  ascending() {
-    return this.sort('asc');
-  }
-
-  /**
-   * Sort the items in of an array value in descending order.
-   * 
-   * Note: This function uses Javascript's default sort functions, and will only
-   * work with string, number, or date values.
-   */
-  descending() {
-    return this.sort('desc');
-  }
-
-  /**
    * Reverse the order of a string, or of items in an array.
    */
   reverse() {
@@ -547,18 +535,15 @@ export class Property implements PropertyProxy {
 
   /** Array and string manipulation */
 
-  size(friendly = false) {
+  size(humanize = false) {
     if (is.array(this.value)) {
-      this.value = friendly ? `${this.value.length.toLocaleString()} items` : this.value.length;
-    }
-    if (is.set(this.value) || is.map(this.value)) {
-      this.value = friendly ? `${this.value.size.toLocaleString()} items` : this.value.size;
-    }
-    if (is.string(this.value)) {
-      this.value = friendly ? `${this.value.length.toLocaleString()} characters` : this.value.length;
-    }
-    if (is.buffer(this.value)) {
-      this.value = friendly ? `${this.value.byteLength.toLocaleString()} bytes` : this.value.byteLength;
+      this.value = humanize ? `${this.value.length.toLocaleString()} items` : this.value.length;
+    } else if (is.set(this.value) || is.map(this.value)) {
+      this.value = humanize ? `${this.value.size.toLocaleString()} items` : this.value.size;
+    } else if (is.string(this.value)) {
+      this.value = humanize ? `${this.value.length.toLocaleString()} characters` : this.value.length;
+    } else if (is.buffer(this.value)) {
+      this.value = humanize ? prettyBytes(this.value.byteLength) : this.value.byteLength;
     }
     return this;
   }
@@ -573,7 +558,6 @@ export class Property implements PropertyProxy {
   limit(length: number) {
     return this.slice(0, length);
   }
-
 
   /** Number manipulation */
 
