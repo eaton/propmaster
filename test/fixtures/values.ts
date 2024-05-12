@@ -31,6 +31,28 @@ export const empty = {
   object: {},
 };
 
+export const coercable = {
+  string: 'text',
+  int: '123',
+  decimal: '1.233',
+  percent: '52.7%',
+  true: 'true',
+  false: 'false',
+  dateSlash: '1977/08/16',
+  dateDash: '1977-08-16',
+}
+
+export const coerced = {
+  int: 123,
+  decimal: 1.233,
+  percent: .527,
+  true: true,
+  false: false,
+  dateSlash: new Date(1977, 9, 16),
+  dateDash: new Date(1977, 9, 16)
+}
+
+
 export const primitives = {
   string: 'string',
   number: 1,
@@ -83,4 +105,4 @@ export const complex = { date, map, set, buffer, func };
 
 export const unsupported = { url, instance, nan };
 
-export const all = { primitives, arrays, nested, complex, empty, truthy, falsy };
+export const all = { primitives, arrays, nested, complex, empty, truthy, falsy, coerced };

@@ -299,6 +299,9 @@ export class Property implements PropertyProxy {
     if (is.numericString(this.value)) {
       this.value = Number(this.value);
     }
+    // TODO: Percentages, if the pct symbol is detected.
+    // Replace `System.Globalization.CultureInfo.CurrentCulture.NumberFormat.PercentSymbol`
+    // with '', convert to a float, and divide by 100.
     return this;
   }
 
@@ -309,7 +312,6 @@ export class Property implements PropertyProxy {
     throw new Error('Not yet implemented.');
     return this;
   }
-
 
   /**
    * Wraps the current value in an array if it is not already an array.

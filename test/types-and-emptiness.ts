@@ -23,12 +23,21 @@ test('non-empty type checks', t => {
 });
 
 test('type coercion', t => {
-  const p = new Propmaster(values.all);
+  const p = new Propmaster(values.coercable);
   
-  t.assert(p.get('primitives.string').is('string'));
-  t.assert(p.get('primitives.string').asArray().is('array'));
+  // Things to array of strings
+  t.assert(p.get('string').is('string'));
+  t.assert(p.get('string').asArray().is('array'));
+  t.assert(p.get('string').asArray().first().is('string'));
 
-  // TODO: asString, asNumber, asDate
+  // Strings to numbers
+  t.assert(p.get('int').asNumber().is('number'));
+  t.is(p.get('int').asNumber().value, values.coerced.int);
+
+  t.assert(p.get('decimal').asNumber().is('number'));
+  t.is(p.get('decimal').asNumber().value, values.coerced.decimal);
+
+  // TODO: Strings to Dates
 });
 
 test('default empty checks', t => {

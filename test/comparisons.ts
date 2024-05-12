@@ -62,3 +62,4 @@ test('array inclusion', t => {
   t.assert(p.get('arrays.numbers').excludes(-1));
   t.assert(p.get('arrays.numbers').excludes('string'));
 })
+
