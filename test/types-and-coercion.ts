@@ -1,6 +1,7 @@
 import test from 'ava';
 import { Propmaster } from '../src/propmaster.js'
 import * as values from './fixtures/values.js';
+import is from '@sindresorhus/is';
 
 test('non-empty type checks', t => {
   const p = new Propmaster(values.all);
@@ -36,6 +37,9 @@ test('type coercion', t => {
 
   t.assert(p.get('decimal').asNumber().is('number'));
   t.is(p.get('decimal').asNumber().value, values.coerced.decimal);
+
+  t.assert(p.get('percent').asNumber().is('number'));
+  t.is(p.get('percent').asNumber().value, values.coerced.percent);
 
   // TODO: Strings to Dates
 });

@@ -1,10 +1,19 @@
-import is, { Predicate, Primitive, TypeName } from '@sindresorhus/is';
+import is, { Predicate, Primitive, TypeName, isString, isEmptyStringOrWhitespace } from '@sindresorhus/is';
 import { ObjectProxy, PropertyProxy, SortablePrimitive } from './types.js';
 import { getValue } from './functions/get-value.js';
 import * as dot from './functions/dot.js';
 import { isEmpty } from './functions/is-empty.js';
 import micromatch from 'micromatch';
 import { toCase } from '@eatonfyi/text';
+
+type PercentString = `${number}%`;
+
+function isPercentString(value: unknown): value is PercentString {
+	if (isString(value) && value.endsWith('%')) {
+    return is.numericString(value.slice(0, -1));
+  }
+  return false;
+}
 
 export class Property implements PropertyProxy {
   constructor(object: ObjectProxy, path: string) {
@@ -294,21 +303,24 @@ export class Property implements PropertyProxy {
   
   /**
    * Converts the current value to a number, if possible.
+   * 
+   * Percentages (aka, any otherwise-numeric string ending with a percent symbol)
    */
   asNumber() {
     if (is.numericString(this.value)) {
       this.value = Number(this.value);
+    } else if (isPercentString(this.value)) {
+      this.value = Number(this.value.slice(0,-1)) / 100;
     }
-    // TODO: Percentages, if the pct symbol is detected.
-    // Replace `System.Globalization.CultureInfo.CurrentCulture.NumberFormat.PercentSymbol`
-    // with '', convert to a float, and divide by 100.
     return this;
   }
 
   /**
-   * Converts the current value to a Date, if possible.
+   * Converts the current value to a Date, if possible. Optionally accepts one or
+   * more date formatting strings, each of which will be attempted in turn until
+   * one returns a valid date object.
    */
-  asDate() {
+  asDate(format?: string | string[]) {
     throw new Error('Not yet implemented.');
     return this;
   }
