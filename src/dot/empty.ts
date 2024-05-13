@@ -1,5 +1,6 @@
 import is from "@sindresorhus/is";
 import { merge } from "./merge.js";
+import { get, set, unset } from "./crud.js";
 
 export interface IsEmptyOptions {
   /**
@@ -66,9 +67,27 @@ export interface IsEmptyOptions {
 }
 
 export const isEmptyDefaults: IsEmptyOptions = {
-    nullIsEmpty: true,
-    emptyStringIsEmpty: true,
+  nullIsEmpty: true,
+  emptyStringIsEmpty: true,
 }
+
+export const isEmptyOptsAll: IsEmptyOptions = {
+  nullIsEmpty: true,
+  emptyStringIsEmpty: true,
+  emptyArrayIsEmpty: true,
+  emptyObjectIsEmpty: true,
+  emptyBufferIsEmpty: true,
+  whiteSpaceIsEmpty: true,
+  falseIsEmpty: true,
+  falsyIsEmpty: true
+}
+
+export const onlyUndefinedIsEmpty: IsEmptyOptions = {
+  nullIsEmpty: false,
+  emptyStringIsEmpty: false,
+}
+
+
 
 /**
  * Test whether found values should be treated as undefined.
@@ -99,6 +118,33 @@ export const isEmpty = (input: unknown, options: IsEmptyOptions = {}) => {
  * Returns `undefined` if the input matches the supplied emptinees criteria,
  * or an unmodified copy of the input if it does not.
  */
-export function emptyToUndefined<T>(input: T, options: IsEmptyOptions = {}): T | undefined {
+export function undefinedIfEmpty<T>(input: T, options: IsEmptyOptions = {}): T | undefined {
   return isEmpty(input, options) ? undefined : input;
+}
+
+/**
+ * Recursively walks an object's properties or an array's elements, removing any
+ * that fit the supplied emptiness criteria.
+ * 
+ */
+export function unsetEmptyProperties(input: unknown, options: IsEmptyOptions = {}) {
+  if (isEmpty(input, options)) return undefined;
+
+  if (is.array(input)) {
+    return undefinedIfEmpty(input.filter(i => undefinedIfEmpty(i, options)));
+  }
+  
+  if (is.object(input)) {
+    for (const k in input) {
+      const value = unsetEmptyProperties(get(input, k), options);
+
+      if (isEmpty(value, options)) {
+        unset(input, k);
+      } else {
+        set(input, k, value);
+      }
+    }
+  }
+
+  return undefinedIfEmpty(input, options);
 }
