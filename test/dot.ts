@@ -93,7 +93,7 @@ test('array selection', t => {
 });
 
 // We'd like to add this in the future, but ts-dot-prop doesn't handle it yet.
-test.failing('novelty array offsets', t => {
+test.failing('negative array offsets', t => {
   t.is(dot.get(arrays, 'numbers.[-1]'), 3);
   t.deepEqual(dot.get(arrays, 'numbers.[0-1]'), [1, 2]);
 });
