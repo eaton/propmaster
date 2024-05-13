@@ -10,7 +10,7 @@ import * as dot from '../dot/index.js';
 import { SortablePrimitive } from './types.js';
 import { ObjectProxy, PropertyProxy } from './interfaces.js';
 import { getValue } from './get-value.js';
-import { isEmpty } from './is-empty.js';
+import { isEmpty } from '../dot/empty.js';
 import { isPercentString } from './type-guards.js';
 
 export class Property implements PropertyProxy {

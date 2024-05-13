@@ -30,3 +30,5 @@ export * from './move.js';
 // - https://github.com/jhchen/fast-diff
 // - https://github.com/mattphillips/deep-object-diff (not much control over rules)
 // - https://github.com/concordancejs/concordance (no typings available; used by ava)
+
+export * from './empty.js';

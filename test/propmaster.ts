@@ -12,7 +12,7 @@ test('value checking', t => {
 
 test('value setting', t => {
   const p = new Propmaster(all);
-  const value = p.set('primitives.string', { value: 'fixed' }).get('primitives.string').value;
+  const value = p.set('primitives.string', { literal: 'fixed' }).get('primitives.string').value;
 
   t.is(value, 'fixed');
   t.is(all.primitives.string, 'string');
@@ -20,7 +20,7 @@ test('value setting', t => {
 
 test('cloning preserves original values', t => {
   const alteredValue = new Propmaster(all)
-    .set('primitives.string', { value: 'fixed' })
+    .set('primitives.string', { literal: 'fixed' })
     .get('primitives.string').value;
   t.is(alteredValue, 'fixed');
   t.is(all.primitives.string, 'string');
@@ -33,7 +33,7 @@ test('altering modifies original values', t => {
   t.is(start.primitives.string, 'altered');
   t.is(dot.get(start, 'primitives.string'), 'altered');
 
-  const finish = new Propmaster(start, { clone: false }).set('primitives.string', { value: 'fixed' }).value;
+  const finish = new Propmaster(start, { clone: false }).set('primitives.string', { literal: 'fixed' }).value;
   t.is(start.primitives.string, 'fixed');
   t.deepEqual(start, finish);
 })
@@ -59,8 +59,8 @@ test('conditional set', t => {
 
   p.if(
     p => p.get('value').value === 1,
-    p => p.set('value', { value: 'modified' }),
-    p => p.set('final', { value: 'failed' }),
+    p => p.set('value', { literal: 'modified' }),
+    p => p.set('final', { literal: 'failed' }),
   );
   
   t.is(p.get('value').value, 'modified');

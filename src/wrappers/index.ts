@@ -1,5 +1,4 @@
 export * from './get-value.js';
-export * from './is-empty.js';
 export * from './object.js';
 export * from './property.js';
 export * from './type-guards.js';
