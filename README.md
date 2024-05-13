@@ -1,17 +1,28 @@
 # Propmaster
 
-Ugly but functional object mutation and manipulation pipelines.
+Ugly but functional transformation pipelines for arrays full of Javascript objects, with a specific emphasis on processing web crawler data.
 
-## What it's for
+## What It Does
 
-Imagine you have a pile of data objects full of highly variable nested properties — maybe parsed JSON files, or the results of a DOM query. I don't know your life, and I don't judge. In my case, it's parsed HEAD/META properties from a pile of web sites. The shape of the data is *roughly* predictable, but record by record it's all over the place.
+Fold, spindle, mutilate. This section needs to be written, but the jist of it is:
 
-Now imagine you want to map that kind-of-similar but different-in-the-details data to something more consistent. In the case of my HTML headers example, it might be "finding the creation / modification dates for each record." Without even considering date *formats*, there are literally dozens of places where that data *might* be tucked: OpenGraph meta tags, analytics tags, HTTP headers, and so on. What you need to do is check each one in turn, grab the first one that's parsable, and treat it as "The Date." Then, repeat that for a zillion other little bits like keywords and titles and author names and so on.
+- Wrap JS objects in a lightweight proxy that makes it easy to:
+  1. Check, retrieve, and alter properties using dot notation paths
+  2. Check and transform individual properties' data types (split a string, join an array, format a number, parse dates in many formats, etc)
+  3. Populate an existing property or create a new one with a literal value, a value pulled from another property, *or* the first matching value from an entire list of properties where the data *might* live.
+- Capture capture a long series of those processing steps as:
+  1. Fluent, chainable JS code
+  2. A text-based DSL
+- Apply those pipelines to many objects at a time
 
- In theory, that's as simple as `const myCleanData = myPileOfObjects.map(o => // magic goes here )`, but when the incoming data is highly variable, the stuff that happens inside that mapping function quickly turns into a nightmare of spaghetti code, type checks, and ugly split/replace/join chains. It's easy to accumulate a bunch of single-use-only glue code. That problem isn't a great fit for any of the high-quality data transformation tools out there, *or* any of the parsing and validation libraries. Enter Propmaster.
+## Why Not Some Other Tool?
 
-## How it works
+Object validation and parsing tools (like [Zod](https://zod.dev), [Joi](https://joi.dev), [Superstruct](https://docs.superstructjs.org), etc.) are great for ensuring **untrusted user input or freshly parsed JSON** data *conforms to a specific shape*. If your data is in a bunch of different shapes and you want to normalize it, you end up writing separate parser/validators for each scenario.
 
-## Usage
+Data transformation and analysis tools (like [Danfo.js(https://danfo.jsdata.org)], [Data-Forge](http://www.data-forge-js.com), [DTL](https://getdtl.org), etc.)) are great for cleaning up and summarizing **consistently-structured but mixed-quality data**. If the data lives in lots of different places (say, scattered across a bunch of different object-shapes, buried in substrings of longer text properties, etc), code written with them gets ugly — fast.
 
-## Caveats
+In short, neither of these approach is a great fit if you have a target data shape, but the values are scattered in *very differeent places* across lots of incoming objects. This problem comes up a lot when we crawl and analyze web sites: "the publication date" might live in HTTP response headers, fragments of the URL, OpenGraph META tags, or an arbitrary `<div>` inside the page's own markup; indeed, it usually lives in different places from one part of a given site to another. Now repeat that for author names, topics, page performance metrics, and a million other bits.
+
+The simplest one-off approach is to write some sort of custom 'processing' function that contains a giant tangle of if/then checks, case statements, and disposable data scrubbing code. That's fine if you only need to do it once, but repeating that process for slightly different datasets, over and over, is a pain.
+
+For us, Propmaster has simplified that work considerably.
