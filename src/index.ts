@@ -1,8 +1,5 @@
-/**
- * Quick and dirty transformation pipelines for arrays of complex objects.
- *
- * @packageDocumentation
- */
-
-export * as dot from './dot/index.js';
-export * from './wrappers/index.js';
+export * from './get-value.js';
+export * from './object.js';
+export * from './property.js';
+export * from './type-guards.js';
+export * from './types.js';

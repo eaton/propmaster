@@ -1,4 +1,4 @@
-import { IsEmptyOptions } from '../dot/empty.js';
+import { IsEmptyOptions } from 'pathy';
 
 export const propmasterDefaults: ObjectProxyOptions = { 
   clone: true,

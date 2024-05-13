@@ -1,4 +1,4 @@
-import * as dot from "../dot/index.js";
+import * as dot from "pathy";
 import { ActiveObject, Handle, OneOrMore, Predicate, PredicateLogic, Retriever } from "./types.js";
 import { ObjectProxyOptions, propmasterDefaults } from './options.js';
 import { ObjectProxy } from './interfaces.js';

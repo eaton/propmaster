@@ -6,11 +6,10 @@ import prettyBytes from 'pretty-bytes';
 import * as cheerio from 'cheerio';
 import { cheerioJsonMapperSync, JsonTemplateObject } from 'cheerio-json-mapper-sync';
 
-import * as dot from '../dot/index.js';
+import * as dot from 'pathy';
 import { SortablePrimitive } from './types.js';
 import { ObjectProxy, PropertyProxy } from './interfaces.js';
 import { getValue } from './get-value.js';
-import { isEmpty } from '../dot/empty.js';
 import { isPercentString } from './type-guards.js';
 
 export class Property implements PropertyProxy {
@@ -102,7 +101,7 @@ export class Property implements PropertyProxy {
    * @see {isEmpty} for options to configure the empty-check rules.
    */
   isEmpty() {
-    return isEmpty(this.value, this.object.options);
+    return dot.isEmpty(this.value, this.object.options);
   }
 
   /**
