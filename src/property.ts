@@ -6,7 +6,7 @@ import prettyBytes from 'pretty-bytes';
 import * as cheerio from 'cheerio';
 import { cheerioJsonMapperSync, JsonTemplateObject } from 'cheerio-json-mapper-sync';
 
-import * as dot from 'pathy';
+import * as dot from 'opu';
 import { SortablePrimitive } from './types.js';
 import { ObjectProxy, PropertyProxy } from './interfaces.js';
 import { getValue } from './get-value.js';
