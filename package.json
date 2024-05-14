@@ -57,7 +57,7 @@
     "cheerio": "^1.0.0-rc.12",
     "cheerio-json-mapper-sync": "^1.0.3",
     "micromatch": "^4.0.5",
-    "opu": "github:eaton/opu",
+    "obby": "^1.0.0",
     "pretty-bytes": "^6.1.1",
     "pretty-ms": "^9.0.0"
   }
