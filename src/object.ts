@@ -1,4 +1,4 @@
-import * as dot from "pathy";
+import * as dot from "obby";
 import { ActiveObject, Handle, OneOrMore, Predicate, PredicateLogic, Retriever } from "./types.js";
 import { ObjectProxyOptions, propmasterDefaults } from './options.js';
 import { ObjectProxy } from './interfaces.js';

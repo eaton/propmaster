@@ -1,10 +1,10 @@
-import { IsEmptyOptions } from 'opu';
+import { EmptyOptions } from 'obby';
 
 export const propmasterDefaults: ObjectProxyOptions = { 
   clone: true,
 };
 
-export interface ObjectProxyOptions extends IsEmptyOptions {
+export interface ObjectProxyOptions {
   /**
    * Throw errors when property mutations fail.
    * 
@@ -32,4 +32,9 @@ export interface ObjectProxyOptions extends IsEmptyOptions {
    * @defaultValue `true`
    */
   clone?: boolean,
+
+  /**
+   * {@inheritDoc obby#EmptyOptions}
+   */
+  empty?: EmptyOptions
 }

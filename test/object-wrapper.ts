@@ -1,7 +1,7 @@
 import test from 'ava'
 import { all } from './fixtures/values.js'
 import { Propmaster } from '../src/index.js';
-import * as dot from 'opu';
+import * as dot from 'obby';
 
 test('value checking', t => {
   const p = new Propmaster(all);

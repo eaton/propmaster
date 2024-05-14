@@ -41,15 +41,7 @@ test('default empty checks', t => {
 });
 
 test('all empty checks', t => {
-  const p = new Propmaster(values.all, {
-    nullIsEmpty: true,
-    emptyStringIsEmpty: true,
-    whiteSpaceIsEmpty: true,
-    emptyArrayIsEmpty: true,
-    emptyObjectIsEmpty: true,
-    falseIsEmpty: true,
-    falsyIsEmpty: true,
-  });
+  const p = new Propmaster(values.all, { empty: { all: true } });
   
   t.is(p.get('primitives.string').isEmpty(), false);
   t.is(p.get('primitives.number').isEmpty(), false);
@@ -67,15 +59,7 @@ test('all empty checks', t => {
 });
 
 test('no empty checks', t => {
-  const p = new Propmaster(values.all, {
-    nullIsEmpty: false,
-    emptyStringIsEmpty: false,
-    whiteSpaceIsEmpty: false,
-    emptyArrayIsEmpty: false,
-    emptyObjectIsEmpty: false,
-    falseIsEmpty: false,
-    falsyIsEmpty: false,
-  });
+  const p = new Propmaster(values.all, { empty: { none: true } });
   
   t.is(p.get('primitives.string').isEmpty(), false);
   t.is(p.get('primitives.number').isEmpty(), false);

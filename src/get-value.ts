@@ -1,4 +1,4 @@
-import * as dot from "pathy";
+import * as dot from "obby";
 import is from '@sindresorhus/is';
 import { Handle, isLiteral, OneOrMore } from "./types.js";
 import { ObjectProxy } from './interfaces.js'
@@ -9,7 +9,7 @@ export function getValue(object: ObjectProxy, handle: OneOrMore<Handle<ObjectPro
       return source.literal;
     } else if (is.string(source)) {
       const tmp = dot.get(object.object, source, fallback);
-      if (!dot.isEmpty(tmp, object.options)) return tmp;
+      if (!dot.isEmpty(tmp, object.options.empty)) return tmp;
     } else {
       const tmp = source(object);
       if (!dot.isEmpty(tmp)) return tmp;
