@@ -1,9 +1,16 @@
-import * as dot from "obby";
-import { ActiveObject, Handle, OneOrMore, Predicate, PredicateLogic, Retriever } from "./types.js";
-import { ObjectProxyOptions, propmasterDefaults } from './options.js';
+import * as dot from 'obby';
+import { getValue } from './get-value.js';
 import { ObjectProxy } from './interfaces.js';
-import { getValue } from "./get-value.js";
-import { Property } from "./property.js";
+import { ObjectProxyOptions, propmasterDefaults } from './options.js';
+import { Property } from './property.js';
+import {
+  ActiveObject,
+  Handle,
+  OneOrMore,
+  Predicate,
+  PredicateLogic,
+  Retriever,
+} from './types.js';
 
 type OPredicate = Predicate<ObjectProxy>;
 type ORetriever = Retriever<ObjectProxy>;
@@ -38,7 +45,12 @@ export class Propmaster implements ObjectProxy {
     return this;
   }
 
-  if(predicate: OPredicate, whenTrue?: ORetriever, whenFalse?: ORetriever, logic: PredicateLogic = 'all') {
+  if(
+    predicate: OPredicate,
+    whenTrue?: ORetriever,
+    whenFalse?: ORetriever,
+    logic: PredicateLogic = 'all',
+  ) {
     if (predicate(this) && whenTrue) {
       whenTrue(this);
     } else if (whenFalse) {
@@ -47,12 +59,21 @@ export class Propmaster implements ObjectProxy {
     return this;
   }
 
-  ifAll(predicate: OPredicate, whenTrue?: OneOrMore<ORetriever>, whenFalse?: OneOrMore<ORetriever>) {
-  }
+  ifAll(
+    predicate: OPredicate,
+    whenTrue?: OneOrMore<ORetriever>,
+    whenFalse?: OneOrMore<ORetriever>,
+  ) {}
 
-  ifAny(predicate: OPredicate, whenTrue?: OneOrMore<ORetriever>, whenFalse?: OneOrMore<ORetriever>) {
-  }
+  ifAny(
+    predicate: OPredicate,
+    whenTrue?: OneOrMore<ORetriever>,
+    whenFalse?: OneOrMore<ORetriever>,
+  ) {}
 
-  ifNone(predicate: OPredicate, whenTrue?: OneOrMore<ORetriever>, whenFalse?: OneOrMore<ORetriever>) {
-  }
+  ifNone(
+    predicate: OPredicate,
+    whenTrue?: OneOrMore<ORetriever>,
+    whenFalse?: OneOrMore<ORetriever>,
+  ) {}
 }

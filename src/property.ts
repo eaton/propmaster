@@ -1,16 +1,19 @@
-import is, { Primitive, TypeName, Predicate } from '@sindresorhus/is';
+import is, { Predicate, Primitive, TypeName } from '@sindresorhus/is';
 
-import micromatch from 'micromatch';
 import { toCase } from '@eatonfyi/text';
-import prettyBytes from 'pretty-bytes';
 import * as cheerio from 'cheerio';
-import { cheerioJsonMapperSync, JsonTemplateObject } from 'cheerio-json-mapper-sync';
+import {
+  cheerioJsonMapperSync,
+  JsonTemplateObject,
+} from 'cheerio-json-mapper-sync';
+import micromatch from 'micromatch';
+import prettyBytes from 'pretty-bytes';
 
 import * as dot from 'obby';
-import { SortablePrimitive } from './types.js';
-import { ObjectProxy, PropertyProxy } from './interfaces.js';
 import { getValue } from './get-value.js';
+import { ObjectProxy, PropertyProxy } from './interfaces.js';
 import { isPercentString } from './type-guards.js';
+import { SortablePrimitive } from './types.js';
 
 export class Property implements PropertyProxy {
   constructor(object: ObjectProxy, path: string) {
@@ -28,27 +31,29 @@ export class Property implements PropertyProxy {
   }
   set value(input: unknown) {
     this._value = input;
-    if (!this.object.options.batchMutations) this.object.set(this.path, { literal: this._value });
+    if (!this.object.options.batchMutations)
+      this.object.set(this.path, { literal: this._value });
   }
 
   done() {
-    if (this.object.options.batchMutations) this.object.set(this.path, { literal: this._value });
+    if (this.object.options.batchMutations)
+      this.object.set(this.path, { literal: this._value });
     return this.object;
   }
 
   /**
    * Finalizes any mutations made to the current value, pushing them to the
    * parent object the property belongs to.
-   * 
+   *
    * @remarks
-   * 
+   *
    * This is somewhat janky; if an object or array reference is being used, this
    * is unecessary. For primitives, however, we receive an automatic copy of the
    * value and must push it back to the parent object.
-   * 
+   *
    * We might want to solve this by always doing the full path lookup, but that
-   * may have ugly perfomance implications. Need to test it later. 
-   * 
+   * may have ugly perfomance implications. Need to test it later.
+   *
    * @experimental
    */
   set(input?: unknown) {
@@ -61,9 +66,9 @@ export class Property implements PropertyProxy {
 
   /**
    * A string representation of the property's value type.
-   * 
+   *
    * @remarks
-   * 
+   *
    * This type name is more specific than the one returned by JavaScript's `typeof`;
    * @see {@link TypeName} for a complete list of supported types.
    */
@@ -75,9 +80,9 @@ export class Property implements PropertyProxy {
 
   /**
    * Returns `true` if the current value's type name matches the input string.
-   * 
+   *
    * @remarks
-   * 
+   *
    * This type name is more specific than the one returned by JavaScript's `typeof`;
    * @see {@link TypeName} for a complete list of supported types.
    */
@@ -94,9 +99,9 @@ export class Property implements PropertyProxy {
 
   /**
    * Returns `true` if the current value is empty.
-   * 
+   *
    * @remarks
-   * 
+   *
    * By default this checks for undefined, null, and zero-length string values.
    * @see {isEmpty} for options to configure the empty-check rules.
    */
@@ -113,21 +118,21 @@ export class Property implements PropertyProxy {
 
   /**
    * Returns `true` if the current value is equivalent to the input value.
-   * 
+   *
    * @remarks
-   * 
+   *
    * This  function uses a deep equality check to handle arrays, nested object properties,
    * and other complex data types but is not guranteed to work on class instances.
    */
   isEqualTo(input: unknown): boolean {
-    return dot.equals(input, this.value)
+    return dot.equals(input, this.value);
   }
 
   /**
    * Returns `true` if the current value is *not equivalent* to the input value.
-   * 
+   *
    * @remarks
-   * 
+   *
    * This  function uses a deep equality check to handle arrays, nested object properties,
    * and other complex data types but is not guranteed to work on class instances.
    */
@@ -137,44 +142,44 @@ export class Property implements PropertyProxy {
 
   /**
    * Returns `true` if the current value is greater than the input value.
-   * 
+   *
    * Note that this check only works with strings, numbers, and dates.
    */
   isGreaterThan(input: SortablePrimitive) {
-    if ((is.number(input) && is.number(this.value))) return (this.value > input);
-    if (is.string(input) && is.string(this.value)) return (this.value > input);
-    if (is.date(input) && is.date(this.value)) return (this.value > input);
+    if (is.number(input) && is.number(this.value)) return this.value > input;
+    if (is.string(input) && is.string(this.value)) return this.value > input;
+    if (is.date(input) && is.date(this.value)) return this.value > input;
     return false;
   }
 
   /**
    * Returns `true` if the current value is less than the input value.
-   * 
+   *
    * Note that this check only works with strings, numbers, and dates.
    */
   isLessThan(input: SortablePrimitive) {
-    if ((is.number(input) && is.number(this.value))) return (this.value < input);
-    if (is.string(input) && is.string(this.value)) return (this.value < input);
-    if (is.date(input) && is.date(this.value)) return (this.value < input);
+    if (is.number(input) && is.number(this.value)) return this.value < input;
+    if (is.string(input) && is.string(this.value)) return this.value < input;
+    if (is.date(input) && is.date(this.value)) return this.value < input;
     return false;
   }
 
   /**
    * Returns `true` if the current value is between the `min` and `max` input
    * values.
-   * 
+   *
    * Note that this check only works with strings, numbers, and dates.
    */
   isBetween(min: SortablePrimitive, max: SortablePrimitive) {
-    if ((is.number(min) && is.number(max) && is.number(this.value))) {
+    if (is.number(min) && is.number(max) && is.number(this.value)) {
       return this.value >= min && this.value <= max;
     }
 
-    if ((is.string(min) && is.string(max) && is.string(this.value))) {
+    if (is.string(min) && is.string(max) && is.string(this.value)) {
       return this.value >= min && this.value <= max;
     }
 
-    if ((is.date(min) && is.date(max) && is.date(this.value))) {
+    if (is.date(min) && is.date(max) && is.date(this.value)) {
       return this.value >= min && this.value <= max;
     }
     return false;
@@ -183,17 +188,17 @@ export class Property implements PropertyProxy {
   /**
    * Returns `true` if the current value is *not between* the `min` and `max` input
    * values.
-   * 
+   *
    * Note that this check only works with strings, numbers, and dates.
    */
-  notBetween(min: SortablePrimitive, max: SortablePrimitive)  {
+  notBetween(min: SortablePrimitive, max: SortablePrimitive) {
     return !this.isBetween(min, max);
   }
 
   /**
    * Returns `true` if the current value is contained in the input array.
-   * 
-   * Note that this check only works with primitive values; in the future, it 
+   *
+   * Note that this check only works with primitive values; in the future, it
    * may be expanded to use a deep equality check on each item, but that would
    * be slightly ridiculous.
    */
@@ -204,8 +209,8 @@ export class Property implements PropertyProxy {
 
   /**
    * Returns `true` if the current value is *not contained* in the input array.
-   * 
-   * Note that this check only works with primitive values; in the future, it 
+   *
+   * Note that this check only works with primitive values; in the future, it
    * may be expanded to use a deep equality check on each item, but that would
    * be slightly ridiculous.
    */
@@ -215,8 +220,8 @@ export class Property implements PropertyProxy {
 
   /**
    * Returns `true` if the current value is an array that contains the input value.
-   * 
-   * Note that this check only works with primitive values; in the future, it 
+   *
+   * Note that this check only works with primitive values; in the future, it
    * may be expanded to use a deep equality check on each item, but that would
    * be slightly ridiculous.
    */
@@ -228,8 +233,8 @@ export class Property implements PropertyProxy {
   /**
    * Returns `true` if the current value is *not* an array that contains the
    * input value.
-   * 
-   * Note that this check only works with primitive values; in the future, it 
+   *
+   * Note that this check only works with primitive values; in the future, it
    * may be expanded to use a deep equality check on each item, but that would
    * be slightly ridiculous.
    */
@@ -240,11 +245,11 @@ export class Property implements PropertyProxy {
   /**
    * Returns `true` if the current value is a string that matches the input pattern.
    * Glob patterns, arrays of glob patterns, and RegEx patterns are all supported.
-   * 
+   *
    * @see {@link https://github.com/micromatch/micromatch Micromatch} for information
    * about supported glob patterns.
    */
-  isLike(input: string | string[] | RegExp) {   
+  isLike(input: string | string[] | RegExp) {
     if (!is.string(this.value)) return false;
 
     if (is.regExp(input)) {
@@ -257,7 +262,7 @@ export class Property implements PropertyProxy {
   /**
    * Returns `true` if the current value is a string that *does not match* the input.
    * pattern. Glob patterns, arrays of glob patterns, and RegEx patterns are all supported.
-   * 
+   *
    * @see {@link https://github.com/micromatch/micromatch Micromatch} for information
    * about supported glob patterns.
    */
@@ -278,7 +283,6 @@ export class Property implements PropertyProxy {
   endsWith(input: string) {
     return is.string(this.value) && this.value.endsWith(input);
   }
-
 
   /** Convenience aliases **/
 
@@ -302,26 +306,26 @@ export class Property implements PropertyProxy {
     if (this.value?.toString) this.value = this.value.toString();
     return this;
   }
-  
+
   /**
    * Converts the current value to a number, if possible.
-   * 
+   *
    * Percentages (aka, any otherwise-numeric string ending with a percent symbol)
    */
   asNumber() {
     if (is.numericString(this.value)) {
       this.value = Number(this.value);
     } else if (isPercentString(this.value)) {
-      this.value = Number(this.value.slice(0,-1)) / 100;
+      this.value = Number(this.value.slice(0, -1)) / 100;
     }
     return this;
   }
 
   /**
    * Wraps the current value in an array if it is not already an array.
-   * 
+   *
    * @remarks
-   * 
+   *
    * This can be useful for normalizing parsed data that collapses single-value
    * arrays into bare values.
    */
@@ -341,7 +345,6 @@ export class Property implements PropertyProxy {
     return this;
   }
 
-
   /** String manipulation **/
 
   /**
@@ -357,7 +360,7 @@ export class Property implements PropertyProxy {
   /**
    * Replace patterns in a string with another value. If `searchValue` is a regex
    * with capture groups, `replaceValue` may include the captured text.
-   * 
+   *
    * @example
    * `p.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1/$2/$3')`
    */
@@ -367,7 +370,7 @@ export class Property implements PropertyProxy {
     }
     return this;
   }
-  
+
   /**
    * Change the capitalization of a string. If no format is specified, `lower` is
    * used. Supported cases include `upper`, `lower`, `first`, `word`, `sentence`,
@@ -384,7 +387,7 @@ export class Property implements PropertyProxy {
     }
     return this;
   }
-  
+
   /**
    * Split a string value into an array of values, based on a separator string or RegEx.
    */
@@ -400,24 +403,25 @@ export class Property implements PropertyProxy {
   protected parseMarkup(type?: 'html' | 'xml') {
     if (is.string(this.value) || is.buffer(this.value)) {
       type ??= this.value.toString().startsWith('<?xml ') ? 'xml' : 'html';
-      return cheerio.load(this.value, (type === 'xml') ? { xmlMode: true } : undefined);
+      return cheerio.load(
+        this.value,
+        type === 'xml' ? { xmlMode: true } : undefined,
+      );
     }
   }
 
   select(selector: string, attribute?: string) {
     const $ = this.parseMarkup();
     if ($) {
-
     }
   }
 
   selectText(selector: string) {
     const $ = this.parseMarkup();
     if ($) {
-
     }
   }
-  
+
   extract(template: JsonTemplateObject | JsonTemplateObject[]) {
     if (is.string(this.value)) {
       this.value = cheerioJsonMapperSync(this.value, template);
@@ -429,7 +433,7 @@ export class Property implements PropertyProxy {
 
   /**
    * Sort the items in of an array value.
-   * 
+   *
    * Note: This function uses Javascript's default sort functions, and will only
    * work with string, number, or date values.
    */
@@ -458,7 +462,7 @@ export class Property implements PropertyProxy {
   /**
    * Use a glob, regex, or predicate function to remove non-matching
    * items from an array.
-   * 
+   *
    * Note: Globs and regexes will only work if array items are strings.
    */
   filter(predicate?: string | RegExp | Predicate) {
@@ -467,13 +471,12 @@ export class Property implements PropertyProxy {
         if (is.regExp(predicate)) {
           this.value = this.value.filter(v => predicate.test(v));
         } else if (is.string(predicate)) {
-          this.value = this.value.filter(v => micromatch.isMatch(v, predicate))
+          this.value = this.value.filter(v => micromatch.isMatch(v, predicate));
         }
-      }
-      else if (is.function(predicate)) {
-        this.value = this.value.filter(predicate)
+      } else if (is.function(predicate)) {
+        this.value = this.value.filter(predicate);
       } else {
-        this.value = this.value.filter(Boolean)
+        this.value = this.value.filter(Boolean);
       }
     }
     return this;
@@ -487,14 +490,22 @@ export class Property implements PropertyProxy {
   }
 
   min() {
-    if (is.array<number>(this.value) || is.array<string>(this.value) || is.array<Date>(this.value)) {
+    if (
+      is.array<number>(this.value) ||
+      is.array<string>(this.value) ||
+      is.array<Date>(this.value)
+    ) {
       this.value = this.value.sort()[0];
     }
     return this;
   }
 
   max() {
-    if (is.array<number>(this.value) || is.array<string>(this.value) || is.array<Date>(this.value)) {
+    if (
+      is.array<number>(this.value) ||
+      is.array<string>(this.value) ||
+      is.array<Date>(this.value)
+    ) {
       this.value = this.value.sort().reverse()[0];
     }
     return this;
@@ -516,7 +527,10 @@ export class Property implements PropertyProxy {
 
   nth(index: number) {
     if (is.array(this.value)) {
-      this.value = index < 0 ? this.value[this.value.length - 1 - index] : this.value[index];
+      this.value =
+        index < 0
+          ? this.value[this.value.length - 1 - index]
+          : this.value[index];
     }
     return this;
   }
@@ -525,13 +539,21 @@ export class Property implements PropertyProxy {
 
   size(humanize = false) {
     if (is.array(this.value)) {
-      this.value = humanize ? `${this.value.length.toLocaleString()} items` : this.value.length;
+      this.value = humanize
+        ? `${this.value.length.toLocaleString()} items`
+        : this.value.length;
     } else if (is.set(this.value) || is.map(this.value)) {
-      this.value = humanize ? `${this.value.size.toLocaleString()} items` : this.value.size;
+      this.value = humanize
+        ? `${this.value.size.toLocaleString()} items`
+        : this.value.size;
     } else if (is.string(this.value)) {
-      this.value = humanize ? `${this.value.length.toLocaleString()} characters` : this.value.length;
+      this.value = humanize
+        ? `${this.value.length.toLocaleString()} characters`
+        : this.value.length;
     } else if (is.buffer(this.value)) {
-      this.value = humanize ? prettyBytes(this.value.byteLength) : this.value.byteLength;
+      this.value = humanize
+        ? prettyBytes(this.value.byteLength)
+        : this.value.byteLength;
     }
     return this;
   }
@@ -551,21 +573,21 @@ export class Property implements PropertyProxy {
 
   round() {
     if (is.number(this.value)) {
-      this.value = Math.round(this.value)
+      this.value = Math.round(this.value);
     }
     return this;
   }
 
   ceil() {
     if (is.number(this.value)) {
-      this.value = Math.ceil(this.value)
+      this.value = Math.ceil(this.value);
     }
     return this;
   }
 
   floor() {
     if (is.number(this.value)) {
-      this.value = Math.floor(this.value)
+      this.value = Math.floor(this.value);
     }
     return this;
   }

@@ -1,18 +1,23 @@
-import is, { TypeName as IsTypeNames } from "@sindresorhus/is";
+import is, { TypeName as IsTypeNames } from '@sindresorhus/is';
 
-type Brand<K, T> = K & { __brand: T }
+type Brand<K, T> = K & { __brand: T };
 export type Html = Brand<string, 'Html'>;
 export type Xml = Brand<string, 'Xml'>;
 
-export type TypeName = IsTypeNames | ('Cheerio' | 'CheerioRoot' | 'Html' | 'Xml');
+export type TypeName =
+  | IsTypeNames
+  | ('Cheerio' | 'CheerioRoot' | 'Html' | 'Xml');
 
 export type ActiveObject = object;
 export type Path = string;
-export type Literal<T = unknown> = { literal: T }
+export type Literal<T = unknown> = { literal: T };
 export function isLiteral(input: unknown): input is Literal {
-  return (is.plainObject(input) && Object.keys(input).length === 1 && 'literal' in input);
+  return (
+    is.plainObject(input) &&
+    Object.keys(input).length === 1 &&
+    'literal' in input
+  );
 }
-
 
 export type Handle<T = unknown> = Path | Retriever<T> | Literal;
 

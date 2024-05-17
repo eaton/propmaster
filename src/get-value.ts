@@ -1,9 +1,13 @@
-import * as dot from "obby";
 import is from '@sindresorhus/is';
-import { Handle, isLiteral, OneOrMore } from "./types.js";
-import { ObjectProxy } from './interfaces.js'
+import * as dot from 'obby';
+import { ObjectProxy } from './interfaces.js';
+import { Handle, isLiteral, OneOrMore } from './types.js';
 
-export function getValue(object: ObjectProxy, handle: OneOrMore<Handle<ObjectProxy>>, fallback?: unknown) {
+export function getValue(
+  object: ObjectProxy,
+  handle: OneOrMore<Handle<ObjectProxy>>,
+  fallback?: unknown,
+) {
   for (const source of is.array(handle) ? handle : [handle]) {
     if (isLiteral(source)) {
       return source.literal;
